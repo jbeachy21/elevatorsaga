@@ -87,16 +87,92 @@
 {
     init: function(elevators, floors) {
         var elevator = elevators[0]; // Let's use the first elevator
+        var elevator1 = elevators[1];
+        
+      
+        
+        elevator.on("floor_button_pressed", function(floorNum) {
+          
+            elevator.goToFloor(floorNum, true)
 
-        // Whenever the elevator is idle (has no more queued destinations) ...
-        elevator.on("idle", function() {
-            // let's go to all the floors (or did we forget one?)
-                elevator.goToFloor(0);
-                elevator.goToFloor(1);
-                elevator.goToFloor(2);
-                elevator.goToFloor(3);
-                elevator.goToFloor(4);
+        })
+        
+        elevator1.on("floor_button_pressed", function(floorNum) {
+
+            elevator1.goToFloor(floorNum,true)
+
+        })
+        
+        
+        elevator1.on("passing_floor", function(floorNum) {
             
+   
+            if(elevator1.getPressedFloors().includes(floorNum)) {
+                elevator1.goToFloor(floorNum);
+            }
+            else {
+                if(elevator1.goingDownIndicator() && floorNum !== 0) {
+                    elevator1.goToFloor(floorNum - 1);                    
+                }
+                else if(elevator1.goingUpIndicator() && floorNum !== 7) {
+                    elevator1.goToFloor(floorNum + 1);
+                } 
+
+            }
+            
+           
+        })
+        
+        elevator.on("passing_floor", function(floorNum) {
+
+
+            if(elevator.getPressedFloors().includes(floorNum)) {
+                elevator.goToFloor(floorNum);
+            }
+            else {
+                if(elevator.goingDownIndicator() && floorNum !== 0) {
+                    elevator.goToFloor(floorNum - 1);                    
+                }
+                else if(elevator.goingUpIndicator() && floorNum !== 7) {
+                    elevator.goToFloor(floorNum + 1);
+                } 
+
+            }
+
+
+        })
+        
+        elevator.on("stopped_at_floor", function(floorNum) {
+            let pressedFloors = elevator.getPressedFloors();
+            for(let i = 0; i<pressedFloors.length; i++) {
+                elevator.goToFloor(pressedFloors[i]);
+            }
+            
+            
+            
+        })
+        elevator1.on("stopped_at_floor", function(floorNum) {
+      
+            let pressedFloors1 = elevator1.getPressedFloors();
+            for(let j = 0; j<pressedFloors1.length; j++) {
+                elevator1.goToFloor(pressedFloors1[j],true);
+            }
+
+        })
+        
+        elevator.on("idle", function() {
+            elevator.goToFloor(4*Math.round(Math.random()),true)
+
+            
+        });
+        
+        elevator1.on("idle", function() {
+            elevator1.goToFloor(7*Math.ceil(Math.random()),true)
+
+
+        });
+        
+        
     },
     update: function(dt, elevators, floors) {
         // We normally don't need to do anything here
