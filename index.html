@@ -162,13 +162,13 @@
         
         elevator.on("idle", function() {
             elevator.goToFloor(4*Math.round(Math.random()),true)
-
+            elevator.goToFloor(elevator.currentFloor() - 1, true)
             
         });
         
         elevator1.on("idle", function() {
             elevator1.goToFloor(7*Math.ceil(Math.random()),true)
-
+            elevator1.goToFloor(elevator1.currentFloor() - 1, true)
 
         });
         
